@@ -1,0 +1,37 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.win11.launcher'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.win11.launcher"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            // подписываем отладочным ключом, чтобы APK можно было сразу установить
+            signingConfig signingConfigs.debug
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}
+// Никаких внешних библиотек: только Android Framework + Kotlin stdlib.
