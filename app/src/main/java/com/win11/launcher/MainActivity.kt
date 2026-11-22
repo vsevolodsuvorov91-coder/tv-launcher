@@ -225,13 +225,24 @@ class MainActivity : Activity() {
 
     private fun nameOf(pkg: String): String = store.label(pkg) ?: apps[pkg]?.label ?: pkg
 
-    private fun icon(pkg: String): Drawable {
-        return try {
-            packageManager.getApplicationIcon(pkg)
+       private fun icon(pkg: String): Drawable {
+        val pm = packageManager
+        try {
+            val tvIntent = pm.getLeanbackLaunchIntentForPackage(pkg)
+            if (tvIntent != null) {
+                val banner = pm.getActivityBanner(tvIntent) ?: pm.getApplicationBanner(pkg)
+                if (banner != null) return banner
+            }
+            val launchIntent = tvIntent ?: pm.getLaunchIntentForPackage(pkg)
+            if (launchIntent != null) {
+                return pm.getActivityIcon(launchIntent)
+            }
+            return pm.getApplicationIcon(pkg)
         } catch (e: Exception) {
-            packageManager.defaultActivityIcon
+            return pm.defaultActivityIcon
         }
     }
+
 
     private fun toast(s: String) = Toast.makeText(this, s, Toast.LENGTH_SHORT).show()
 
